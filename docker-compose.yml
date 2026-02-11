@@ -1,0 +1,13 @@
+version: '3'
+services:
+        log-capture:
+                image: db_automator
+                build: .
+                env_file:
+                        - .env # Optional; defaults will be used if it does not exist
+                volumes:
+                        # Mount Docker socket so this service can read logs from sibling containers
+                        - /var/run/docker.sock:/var/run/docker.sock
+                        # Persist captured logs to host
+                        - ./logs:/app/logs
+                restart: unless-stopped
