@@ -95,7 +95,7 @@ def cleanup_aurora():
         for snap in snapshots:
             tags_resp = rds.list_tags_for_resource(ResourceName=snap["DBSnapshotArn"])
             tags = {t["Key"]: t["Value"] for t in tags_resp.get("TagList", [])}
-            if tags.get("created_by") == "db-automator":
+            if tags.get("created_by") == "db-automator" and "SnapshotCreateTime" in snap:
                 our_snapshots.append({
                     "id": snap["DBSnapshotIdentifier"],
                     "time": snap["SnapshotCreateTime"],

@@ -15,5 +15,5 @@ services:
                         # Persist SQLite backups to host
                         - ./backups:/app/backups
                         # Read Spring's SQLite database (read-only)
-                        - ../spring-tracking/volumes:/spring-volumes:ro
+                        - /home/ubuntu/open/spring/volumes:/spring-volumes:ro
                 restart: unless-stopped
