@@ -17,9 +17,7 @@ COPY . /app
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Create non-privileged user, add to GID 998 (host docker group) for socket access
-RUN groupadd -g 998 dockerhost || true
-RUN useradd -m -u 1000 -G dockerhost appuser && \
+RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app && \
     chmod -R 755 /app && \
     # Make code read-only for appuser
