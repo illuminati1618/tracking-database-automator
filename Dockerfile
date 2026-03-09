@@ -6,7 +6,8 @@ WORKDIR /app
 
 # Install system dependencies and clean up apt cache
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git && \
+    git \
+    cron && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy application code into the container
@@ -21,20 +22,19 @@ RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app && \
     chmod -R 755 /app && \
     # Make code read-only for appuser
-    chmod -R 555 /app/main.py && \
-    # Ensure log directory will be writable
-    mkdir -p /app/logs && \
-    chmod -R 755 /app/logs && \
-    chown -R appuser:appuser /app/logs
+    chmod -R 555 /app/main.py /app/filter.py /app/snapshot.py && \
+    # Ensure log and backup directories will be writable
+    mkdir -p /app/logs /app/backups && \
+    chmod -R 755 /app/logs /app/backups && \
+    chown -R appuser:appuser /app/logs /app/backups
 
-# Switch to non-privileged user
-USER appuser
+# Install crontab for appuser
+RUN crontab -u appuser /app/crontab
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 
-# Expose no HTTP port — this is a background worker service
-# Logs are written to /app/logs (mount a volume there)
-
-# Start log capture service
-CMD ["python", "main.py"]
+# Entrypoint: dump env vars for cron, start cron, then run log capture as appuser
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod 755 /app/entrypoint.sh
+CMD ["/app/entrypoint.sh"]
