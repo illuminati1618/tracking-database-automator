@@ -1,0 +1,4 @@
+# Database snapshot schedule
+# Runs daily at 2 AM UTC
+# Sources /app/env.sh because cron doesn't inherit container env vars
+0 2 * * * . /app/env.sh && cd /app && python snapshot.py scheduled >> /app/logs/snapshot.log 2>&1

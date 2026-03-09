@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 
 import docker
+import filter as log_filter
 
 # --- Configuration ---
 CONTAINER_NAMES = os.environ.get("CONTAINER_NAMES", "flask_open,java_springv1").split(",")
@@ -84,6 +85,14 @@ def main():
         t = threading.Thread(target=stream_container_logs, args=(name,), name=f"capture-{name}", daemon=True)
         t.start()
         threads.append(t)
+
+    # Share our shutdown event with the filter module
+    log_filter.shutdown_event = shutdown_event
+
+    # Start filter stage — watches LOG_DIR for new *.log files and filters them
+    filter_thread = threading.Thread(target=log_filter.watch_for_new_logs, name="filter", daemon=True)
+    filter_thread.start()
+    threads.append(filter_thread)
 
     # Keep main thread alive until shutdown
     while not shutdown_event.is_set():

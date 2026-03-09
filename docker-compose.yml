@@ -12,4 +12,8 @@ services:
                         - /var/run/docker.sock:/var/run/docker.sock
                         # Persist captured logs to host
                         - ./logs:/app/logs
+                        # Persist SQLite backups to host
+                        - ./backups:/app/backups
+                        # Read Spring's SQLite database (read-only)
+                        - ../spring-tracking/volumes:/spring-volumes:ro
                 restart: unless-stopped
