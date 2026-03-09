@@ -80,7 +80,8 @@ SPRING_IMPORTANT_PATTERNS = re.compile(
     r'|delete'                        # deletion operations
     r'|migration'                     # schema migrations
     r'|Exception'                     # exceptions
-    r'|WARN.*(?:auth|login|token|jwt|forbidden|unauthorized)',  # auth warnings
+    r'|WARN.*(?:auth|login|token|jwt|forbidden|unauthorized)'  # auth warnings
+    r')',
     re.IGNORECASE
 )
 
