@@ -8,6 +8,7 @@ from pathlib import Path
 
 import docker
 import filter as log_filter
+import analyzer as log_analyzer
 
 # --- Configuration ---
 CONTAINER_NAMES = os.environ.get("CONTAINER_NAMES", "flask_open,java_springv1").split(",")
@@ -93,6 +94,12 @@ def main():
     filter_thread = threading.Thread(target=log_filter.watch_for_new_logs, name="filter", daemon=True)
     filter_thread.start()
     threads.append(filter_thread)
+
+    # Start analyzer stage — watches logs/important/ and emits alerts
+    log_analyzer.shutdown_event = shutdown_event
+    analyzer_thread = threading.Thread(target=log_analyzer.watch_important_dir, name="analyzer", daemon=True)
+    analyzer_thread.start()
+    threads.append(analyzer_thread)
 
     # Keep main thread alive until shutdown
     while not shutdown_event.is_set():

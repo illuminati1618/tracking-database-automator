@@ -14,6 +14,8 @@ services:
                         - ./logs:/app/logs
                         # Persist SQLite backups to host
                         - ./backups:/app/backups
+                        # Persist anomaly alerts to host
+                        - ./alerts:/app/alerts
                         # Read Spring's SQLite database (read-only)
                         - /home/ubuntu/open/spring/volumes:/spring-volumes:ro
                 restart: unless-stopped

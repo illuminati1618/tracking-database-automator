@@ -12,7 +12,7 @@ import os
 import sys
 import shutil
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 logging.basicConfig(
@@ -48,7 +48,7 @@ def snapshot_aurora(trigger: str = "scheduled") -> bool:
         log.error("boto3 not installed, cannot create Aurora snapshot")
         return False
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     snapshot_id = f"{RDS_INSTANCE_ID}-{now.strftime('%Y%m%d-%H%M%S')}"
 
     try:
@@ -123,7 +123,7 @@ def snapshot_sqlite(trigger: str = "scheduled") -> bool:
         log.warning(f"SQLite file not found at {SPRING_SQLITE_PATH}, skipping")
         return False
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     dest_dir = BACKUP_DIR / "spring"
     dest_dir.mkdir(parents=True, exist_ok=True)
 
@@ -186,7 +186,7 @@ def _apply_retention(snapshots: list[dict], delete_fn):
     if not snapshots:
         return
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     keep = set()
 
     # Keep the N most recent (daily)
