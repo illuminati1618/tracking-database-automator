@@ -21,7 +21,7 @@ RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app && \
     chmod -R 755 /app && \
     # Make code read-only for appuser
-    chmod -R 555 /app/main.py /app/filter.py /app/snapshot.py && \
+    chmod -R 555 /app/main.py /app/filter.py /app/snapshot.py /app/api_server.py && \
     # Ensure log and backup directories will be writable
     mkdir -p /app/logs /app/backups && \
     chmod -R 755 /app/logs /app/backups && \
@@ -32,6 +32,9 @@ RUN crontab -u appuser /app/crontab
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
+
+# Expose API port
+EXPOSE 8586
 
 # Entrypoint: dump env vars for cron, start cron, then run log capture as appuser
 COPY entrypoint.sh /app/entrypoint.sh

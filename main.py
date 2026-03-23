@@ -101,6 +101,13 @@ def main():
     analyzer_thread.start()
     threads.append(analyzer_thread)
 
+    # Start API server — accepts snapshot trigger requests from Flask backend
+    import api_server
+    api_server.shutdown_event = shutdown_event
+    api_thread = threading.Thread(target=api_server.start_api_server, name="api-server", daemon=True)
+    api_thread.start()
+    threads.append(api_thread)
+
     # Keep main thread alive until shutdown
     while not shutdown_event.is_set():
         # Log a heartbeat every minute so operators know the service is running
