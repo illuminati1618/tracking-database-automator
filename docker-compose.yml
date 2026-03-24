@@ -5,6 +5,8 @@ services:
                 build: .
                 env_file:
                         - .env # Optional; defaults will be used if it does not exist
+                ports:
+                        - "8586:8586"
                 group_add:
                         - "998" # host docker group GID — grants access to /var/run/docker.sock
                 volumes:
@@ -14,6 +16,8 @@ services:
                         - ./logs:/app/logs
                         # Persist SQLite backups to host
                         - ./backups:/app/backups
+                        # Persist anomaly alerts to host
+                        - ./alerts:/app/alerts
                         # Read Spring's SQLite database (read-only)
                         - /home/ubuntu/open/spring/volumes:/spring-volumes:ro
                 restart: unless-stopped

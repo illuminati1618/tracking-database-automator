@@ -23,7 +23,7 @@ Flask/Spring applications have experienced data loss (e.g., mass password resets
 [ Phase 4: Control Panel (GitHub Pages) ]
          │
          ▼
-[ Phase 5: Aurora Snapshots & Recovery ]
+[ Phase 5: Aurora Snapshots & Recovery ]  ← DONE
 ```
 
 ---
@@ -91,7 +91,7 @@ Flask/Spring applications have experienced data loss (e.g., mass password resets
 
 ---
 
-### Phase 5 — Aurora Snapshots & Recovery
+### Phase 5 — Aurora Snapshots & Recovery ✅ DONE
 **Goal**: Automated backups with configurable retention.
 
 - Cron-based snapshots (daily minimum, configurable)
