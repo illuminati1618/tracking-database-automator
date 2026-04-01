@@ -11,5 +11,8 @@ chmod 666 /var/run/docker.sock
 # Start cron daemon in background
 cron
 
+# Start API server in background
+su -s /bin/bash appuser -c "cd /app && python api.py" &
+
 # Run log capture as appuser (foreground)
 exec su -s /bin/bash appuser -c "cd /app && python main.py"
